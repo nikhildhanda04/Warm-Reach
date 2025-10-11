@@ -4,7 +4,7 @@ import Hero from "./components/landing/hero";
 export default function Home() {
   return (
         <>
-          <div className="flex flex-col gap-36 max-w-9xl">
+          <div className="flex flex-col h-full gap-36 max-w-9xl">
             
             <div>
               <Navbar />

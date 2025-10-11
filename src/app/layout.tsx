@@ -1,20 +1,19 @@
 import type { Metadata } from "next";
-import { Anton, DM_Sans, Fraunces } from "next/font/google";
+import { Playwrite_US_Modern, Roboto_Mono, Inter } from "next/font/google";
 import "./globals.css";
 
-const anton = Anton({
-  variable: "--font-anton",
-  subsets: ["latin"],
+const playwrite = Playwrite_US_Modern({
+  variable: "--font-playwrite",
   weight: ["400"]
 });
 
-const dmsans = DM_Sans({
-  variable: "--font-dmsans",
+const robotomono = Roboto_Mono({
+  variable: "--font-robotomono",
   subsets: ["latin"],
 });
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -31,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${dmsans.variable} ${fraunces.variable} ${anton.variable} antialiased bg-light dark:bg-dark`}
+        className={`${robotomono.variable} ${inter.variable} ${playwrite.variable} antialiased bg-light dark:bg-dark`}
       >
         {children}
       </body>
