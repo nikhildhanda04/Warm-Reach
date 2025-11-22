@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils";
-import Features from "./features";
+import Link from "next/link";
 
 export default function Hero(){
   return(
     <>
     
-      <div className="flex flex-row tracking-tight w-full  text-center justify-center overflow-hidden bg-gradient-to-b from-gray-50 pt-20 max-h-screen to-white ">
+      <div className="flex flex-row tracking-tight w-full text-center justify-center overflow-hidden bg-gradient-to-b from-gray-50 pt-32 pb-20 max-h-screen to-white ">
         <Mail className="absolute size-190 -right-50 -top-40 -rotate-125 overflow-hidden text-neutral-400/[0.2]"/>
         <Mailbox className="absolute size-140 -left-30 top-90 rotate-30 overflow-hidden text-neutral-400/[0.2]"/>
         <div 
@@ -16,18 +16,22 @@ export default function Hero(){
           }}
         />
         <BackgroundGrids />
-        <div className="flex flex-col gap-6 max-w-6xl relative z-10">
+        <div className="flex flex-col gap-6 max-w-6xl relative z-10 px-4">
           <h1 className="text-4xl sm:text-5xl text-shadow-lg md:text-6xl lg:text-7xl text-zinc-700 font-primary font-bold tracking-tight leading-tight">
-            Converting cold mails <br /> to <span className="text-black underline decoration-4 md:decoration-7 underline-offset-3 font-logo font-extrabold decoration-yellow-400">warm letters</span>.
+            Stop Drafting. <br /> Start <span className="text-black underline decoration-4 md:decoration-7 underline-offset-3 font-logo font-extrabold decoration-yellow-400">Connecting</span>.
           </h1>
-          <p className="font-secondary text-balance text-gray-800 text-xs sm:text-sm md:text-md max-w-3xl px-4">
-            We help you convert your emails, from ones which will never have any effect on <br className="hidden md:block" />the people to ones that leave a huge impact and helps you confirm your job title.
+          <p className="font-secondary text-balance text-gray-800 text-base sm:text-lg md:text-xl max-w-3xl mx-auto">
+            Generate highly personalized cold emails, job applications, and follow-ups in seconds by matching your resume to any context.
           </p>
+          <div className="mt-4">
+            <Link 
+              href="/generate"
+              className="inline-block px-8 py-4 bg-yellow-500 hover:-top-1 active:top-0 active:shadow-[0px_0px_rgba(0,0,0,0)] transition-all duration-100 relative hover:shadow-[0px_5px_1px_rgba(0,0,0,0.9)] text-black font-medium rounded-full text-lg font-primary"
+            >
+              🚀 Generate Your First Email (It&apos;s Free!)
+            </Link>
+          </div>
         </div>
-      </div>
-
-      <div>
-        <Features/>
       </div>
 
     </>
@@ -119,9 +123,9 @@ const Mailbox = (props: React.SVGProps<SVGSVGElement>) => {
         viewBox="0 0 24 24"  
         fill="none"  
         stroke="currentColor"  
-        stroke-width="2"  
-        stroke-linecap="round"  
-        stroke-linejoin="round"  
+        strokeWidth="2"  
+        strokeLinecap="round"  
+        strokeLinejoin="round"  
           className={`icon icon-tabler icons-tabler-filled icon-tabler-mail ${props.className ?? ""}`}
     >
     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>

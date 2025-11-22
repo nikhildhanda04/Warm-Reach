@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playwrite_US_Modern, Roboto_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/lib/auth-context";
 
 const playwrite = Playwrite_US_Modern({
   variable: "--font-playwrite",
@@ -32,7 +33,9 @@ export default function RootLayout({
       <body
         className={`${robotomono.variable} ${inter.variable} ${playwrite.variable} antialiased bg-light dark:bg-dark`}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

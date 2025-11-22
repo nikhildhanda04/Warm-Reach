@@ -1,41 +1,55 @@
 export default function Features(){
     return(
-        <>
-        <div className="flex flex-col sm:flex-row gap-8 mt-32 justify-between text-center w-full items-center px-4 sm:px-12 md:px-40 lg:px-56">
-            
-            <div className="flex flex-col items-center gap-4 z-99">
-                <div>
-                    <Pen className="size-6 md:size-7 lg:size-10 text-pink-500"/>
-                </div>
-                <div className="font-secondary text-gray-700 text-balance tracking-tight text-xs md:text-sm ">
-                    rewrite any email in a manner that gets replies, in just one click.
+        <section className="py-20 px-4 bg-gradient-to-b from-white to-gray-50">
+            <div className="max-w-6xl mx-auto">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-16 text-zinc-700 font-primary">
+                    Why Choose Warm Reach?
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="flex flex-col items-center text-center gap-4 p-6 rounded-lg hover:bg-white transition-colors">
+                        <div>
+                            <Lightning className="size-8 md:size-10 text-yellow-500"/>
+                        </div>
+                        <h3 className="text-lg font-semibold text-zinc-700 font-primary">⚡️ Lightning Fast</h3>
+                        <p className="font-secondary text-gray-600 text-balance tracking-tight text-sm md:text-base">
+                            Draft perfect emails in seconds, not hours.
+                        </p>
+                    </div>
+
+                    <div className="flex flex-col items-center text-center gap-4 p-6 rounded-lg hover:bg-white transition-colors">
+                        <div>
+                            <Target className="size-8 md:size-10 text-yellow-500"/>
+                        </div>
+                        <h3 className="text-lg font-semibold text-zinc-700 font-primary">🎯 Hyper-Personalization</h3>
+                        <p className="font-secondary text-gray-600 text-balance tracking-tight text-sm md:text-base">
+                            Our AI cross-references your skills with the target context, ensuring maximum relevance.
+                        </p>
+                    </div>
+
+                    <div className="flex flex-col items-center text-center gap-4 p-6 rounded-lg hover:bg-white transition-colors">
+                        <div>
+                            <Tone className="size-8 md:size-10 text-yellow-500"/>
+                        </div>
+                        <h3 className="text-lg font-semibold text-zinc-700 font-primary">✍️ Control the Tone</h3>
+                        <p className="font-secondary text-gray-600 text-balance tracking-tight text-sm md:text-base">
+                            Choose from various tones (Formal, Enthusiastic, Direct) to fit the situation.
+                        </p>
+                    </div>
+
+                    <div className="flex flex-col items-center text-center gap-4 p-6 rounded-lg hover:bg-white transition-colors">
+                        <div>
+                            <History className="size-8 md:size-10 text-yellow-500"/>
+                        </div>
+                        <h3 className="text-lg font-semibold text-zinc-700 font-primary">💾 Built-in History</h3>
+                        <p className="font-secondary text-gray-600 text-balance tracking-tight text-sm md:text-base">
+                            Never lose a great email—access and reuse previous drafts anytime.
+                        </p>
+                    </div>
                 </div>
             </div>
-
-            <div className="flex flex-col items-center gap-4 z-99">
-                <div>
-                    <Ai className="size-6 md:size-7 lg:size-10 text-pink-500"/>
-                </div>
-                <div className="font-secondary text-gray-700 text-balance tracking-tight text-xs md:text-sm  ">
-                    use our latest AI to write the best cold email for you, tailored to your needs.
-
-                </div>
-            </div>
-
-            <div className="flex flex-col items-center gap-4 z-99">
-                <div>
-                    <Rating className="size-6 md:size-7 lg:size-10 text-pink-500"/>
-                </div>
-                <div className="font-secondary text-gray-700 text-balance tracking-tight text-xs md:text-sm ">
-                    check the rating of your email before sending it out, and improve it if needed.
-                </div>
-            </div>
-            
-        </div>
-        </>
+        </section>
     )
 }
-
 const Pen = (props: React.SVGProps<SVGSVGElement>) => {
     return (
         <svg
@@ -102,5 +116,92 @@ const Rating = (props: React.SVGProps<SVGSVGElement>) => (
         <path d="M4 4l7 7" />
         <path d="M9 4l3.5 3.5" />
         <path d="M4 9l3.5 3.5" />
+    </svg>
+);
+
+const Lightning = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+        {...props}
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={`icon icon-tabler icons-tabler-outline icon-tabler-bolt ${props.className ?? ""}`}
+    >
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11z" />
+    </svg>
+);
+
+const Target = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+        {...props}
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={`icon icon-tabler icons-tabler-outline icon-tabler-target ${props.className ?? ""}`}
+    >
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+        <path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0" />
+        <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+    </svg>
+);
+
+const Tone = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+        {...props}
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={`icon icon-tabler icons-tabler-outline icon-tabler-adjustments ${props.className ?? ""}`}
+    >
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M4 10a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+        <path d="M6 4v4" />
+        <path d="M6 12v8" />
+        <path d="M10 16a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+        <path d="M12 4v10" />
+        <path d="M12 18v2" />
+        <path d="M16 7a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+        <path d="M18 4v1" />
+        <path d="M18 9v11" />
+    </svg>
+);
+
+const History = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+        {...props}
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={`icon icon-tabler icons-tabler-outline icon-tabler-history ${props.className ?? ""}`}
+    >
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M12 8l0 4l2 2" />
+        <path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5" />
     </svg>
 );

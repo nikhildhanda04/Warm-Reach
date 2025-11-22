@@ -4,19 +4,51 @@ import Email from "../../../../lib/models/email";
 
 export async function POST(req) {
   try {
-    await connectDB();
+    // Connect to database first
+    try {
+      await connectDB();
+    } catch (dbError) {
+      return new Response(
+        JSON.stringify({ 
+          message: "Database connection error: " + dbError.message + ". Please check your MongoDB connection string and ensure your IP is whitelisted in MongoDB Atlas."
+        }),
+        { status: 500 }
+      );
+    }
 
     const body = await req.json();
-    const { context } = body;
+    const { targetContext, senderResume, tone = "Professional", userId } = body;
 
-    if (!context) {
+    if (!targetContext || !senderResume) {
       return new Response(
-        JSON.stringify({ message: "Context is required" }),
+        JSON.stringify({ message: "Both target context and sender resume are required" }),
         { status: 400 }
       );
     }
 
-    const prompt = `You are the best, most professional, and hireable cold email generator. Based on the following context, create a JSON object with keys: "subject" (short, attention-grabbing subject line), "body" (well-structured professional cold email body), and "ideas" (optional additional ideas or follow-ups).\n\nContext: ${context}`;
+    const prompt = `You are the best, most professional, and hireable cold email generator. Your task is to create a highly personalized email by cross-referencing the target context with the sender's resume/profile.
+
+TARGET CONTEXT (What the email is about - Job Description, client brief, or company profile):
+${targetContext}
+
+SENDER PROFILE (Resume/CV - Background, skills, and accomplishments):
+${senderResume}
+
+TONE: ${tone}
+
+Instructions:
+1. Analyze the target context to understand what is needed (skills, experience, qualifications)
+2. Cross-reference with the sender's resume to find matching skills, experiences, and accomplishments
+3. Create a personalized email that highlights specific connections between the sender's background and the target requirements
+4. Make it sound human and personalized - not like a generic template
+5. The email should feel like a "cold email" that doesn't feel cold
+
+Create a JSON object with these keys:
+- "subject": A short, attention-grabbing subject line (max 60 characters)
+- "body": A well-structured professional email body (3-5 paragraphs, personalized and relevant)
+- "ideas": An array of 2-3 optional follow-up ideas or additional talking points
+
+The email should be highly relevant, highlight specific matching skills and experiences, and sound human and personalized.`;
 
     const geminiRes = await axios.post(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" +
@@ -42,17 +74,41 @@ export async function POST(req) {
     }
 
     const newEmail = await Email.create({
-      context,
+      userId: userId || null,
+      targetContext,
+      senderResume,
       subject: emailData.subject,
       body: emailData.body,
-      ideas: emailData.ideas || "",
+      ideas: emailData.ideas || [],
+      tone,
     });
 
     return new Response(JSON.stringify(newEmail), { status: 201 });
   } catch (error) {
+    // Check if it's a MongoDB error
+    if (error.message && (error.message.includes('ECONNREFUSED') || error.message.includes('mongodb') || error.message.includes('querySrv'))) {
+      return new Response(
+        JSON.stringify({
+          message: "Database connection error: " + error.message + ". Please check your MongoDB connection string in .env.local and ensure your IP is whitelisted in MongoDB Atlas.",
+        }),
+        { status: 500 }
+      );
+    }
+    
+    // Check if it's a Gemini API error
+    if (error.message && (error.message.includes('Gemini') || error.message.includes('API') || error.response)) {
+      return new Response(
+        JSON.stringify({
+          message: "Gemini API error: " + error.message,
+        }),
+        { status: 500 }
+      );
+    }
+    
+    // Generic error
     return new Response(
       JSON.stringify({
-        message: "Gemini API error: " + error.message,
+        message: "Error: " + error.message,
       }),
       { status: 500 }
     );

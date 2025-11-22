@@ -10,10 +10,16 @@
   },
   "dependencies": {
     "axios": "^1.12.1",
+    "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.24",
+    "lucide-react": "^0.554.0",
+    "mammoth": "^1.11.0",
     "mongoose": "^8.18.1",
     "next": "15.5.3",
+    "next-auth": "^4.24.13",
+    "pdf-parse": "^2.4.5",
+    "pdfjs-dist": "^5.4.394",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "tailwind-merge": "^3.3.1"
