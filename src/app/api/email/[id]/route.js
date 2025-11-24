@@ -1,5 +1,5 @@
-import connectDB from "../../../../../lib/dbConnection";
-import Email from "../../../../../lib/models/email";
+import connectDB from "../../../../lib/dbConnection";
+import Email from "../../../../lib/models/email";
 
 export async function GET(req, { params }) {
   try {
