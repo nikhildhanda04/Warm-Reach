@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { History, Loader2, Mail, X } from "lucide-react";
+import { History, Loader2, Mail } from "lucide-react";
 
 interface Email {
   _id: string;
@@ -120,4 +120,6 @@ export default function EmailHistory({ userId, onSelectEmail }: EmailHistoryProp
     </div>
   );
 }
+
+
 

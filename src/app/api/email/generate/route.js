@@ -4,7 +4,7 @@ import Email from "../../../../lib/models/email";
 
 export async function POST(req) {
   try {
-    // Connect to database first
+    
     try {
       await connectDB();
     } catch (dbError) {
