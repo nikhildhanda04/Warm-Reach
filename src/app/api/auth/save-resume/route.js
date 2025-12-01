@@ -1,16 +1,28 @@
 import connectDB from "../../../../lib/dbConnection";
 import User from "../../../../lib/models/user";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export async function POST(req) {
   try {
     await connectDB();
 
-    const body = await req.json();
-    const { userId, resume } = body;
+    const session = await auth.api.getSession({
+      headers: await headers()
+    });
 
-    if (!userId || !resume) {
+    if (!session) {
+      return Response.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await req.json();
+    const { resume } = body;
+
+    const userId = session.user.id;
+
+    if (!resume) {
       return Response.json(
-        { message: "User ID and resume are required" },
+        { message: "Resume is required" },
         { status: 400 }
       );
     }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Playwrite_US_Modern, Roboto_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/lib/auth-context";
+
 
 const playwrite = Playwrite_US_Modern({
   variable: "--font-playwrite",
@@ -19,8 +19,16 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Warm Reach",
-  description: "A free AI cold email generator",
+  title: "Warm Reach - AI Cold Email Generator",
+  description: "Generate highly personalized cold emails in seconds using AI. Cross-reference your resume with job descriptions to create the perfect outreach.",
+  keywords: ["cold email", "AI email generator", "job application", "networking", "sales outreach", "cover letter generator"],
+  openGraph: {
+    title: "Warm Reach - AI Cold Email Generator",
+    description: "Generate highly personalized cold emails in seconds using AI.",
+    type: "website",
+    locale: "en_US",
+    url: "https://warmreach.com", // Placeholder URL
+  },
 };
 
 export default function RootLayout({
@@ -33,9 +41,7 @@ export default function RootLayout({
       <body
         className={`${robotomono.variable} ${inter.variable} ${playwrite.variable} antialiased bg-light dark:bg-dark`}
       >
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        {children}
       </body>
     </html>
   );

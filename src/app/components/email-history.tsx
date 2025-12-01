@@ -23,27 +23,28 @@ export default function EmailHistory({ userId, onSelectEmail }: EmailHistoryProp
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    fetchEmails();
-  }, [userId]);
-
   const fetchEmails = async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/email/history?userId=${userId}`);
-      const data = await response.json();
-
-      if (!response.ok) {
+      if (response.ok) {
+        const data = await response.json();
+        setEmails(data);
+      } else {
+        const data = await response.json();
         throw new Error(data.message || "Failed to fetch emails");
       }
-
-      setEmails(data);
     } catch (err) {
+      console.error("Error fetching history:", err);
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchEmails();
+  }, [userId]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

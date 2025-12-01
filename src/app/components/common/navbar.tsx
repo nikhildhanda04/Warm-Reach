@@ -2,80 +2,79 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useAuth } from "@/lib/auth-context";
-import AuthPanel from "../auth/auth-panel";
+import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import AuthSheet from "@/components/auth/AuthSheet";
 import { LogOut, User } from "lucide-react";
 
 export default function Navbar() {
-    const [authPanelOpen, setAuthPanelOpen] = useState(false);
-    const [authTab, setAuthTab] = useState<"login" | "signup">("login");
-    const { user, logout } = useAuth();
+    const { data: session } = authClient.useSession();
+    const router = useRouter();
+    const [showAuthSheet, setShowAuthSheet] = useState(false);
+    const [authTab, setAuthTab] = useState<"login" | "register">("login");
 
-    const handleLoginClick = () => {
-        setAuthTab("login");
-        setAuthPanelOpen(true);
+    const handleLogout = async () => {
+        await authClient.signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    router.push("/");
+                    router.refresh();
+                },
+            },
+        });
     };
 
-    const handleSignupClick = () => {
-        setAuthTab("signup");
-        setAuthPanelOpen(true);
+    const openAuth = (tab: "login" | "register") => {
+        setAuthTab(tab);
+        setShowAuthSheet(true);
     };
 
-    return(
-        <>
-        <div className="flex flex-row w-full justify-between bg-white/[0.3] backdrop-blur-md z-99 fixed tracking-tight px-24 py-6">
+    return (
+        <nav className="border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between h-16 items-center">
+                    <Link href="/" className="flex items-center gap-2">
+                        <span className="text-2xl font-bold bg-gradient-to-r from-yellow-600 to-yellow-500 bg-clip-text text-transparent font-primary">
+                            Warm Reach
+                        </span>
+                    </Link>
 
-            <div className="flex flex-row gap-4">
-                <Link href="/" className="font-logo tracking-tigher text-2xl hover:opacity-80 transition-opacity">
-                    warm reach
-                </Link>
+                    <div className="flex items-center gap-4">
+                        {session ? (
+                            <div className="flex items-center gap-4">
+                                <div className="hidden sm:flex items-center gap-2 text-sm text-gray-600 font-primary">
+                                    <User className="w-4 h-4" />
+                                    <span>{session.user.name}</span>
+                                </div>
+                                <Button
+                                    variant="ghost"
+                                    onClick={handleLogout}
+                                    className="font-primary text-gray-600 hover:text-red-600 hover:bg-red-50"
+                                >
+                                    <LogOut className="w-4 h-4 sm:mr-2" />
+                                    <span className="hidden sm:inline">Log out</span>
+                                </Button>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    onClick={() => openAuth("register")}
+                                    className="font-primary bg-yellow-500 hover:bg-yellow-600 text-white shadow-sm hover:shadow-md transition-all"
+                                >
+                                    Create Account or Login
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
 
-            <div className="flex flex-row gap-6 text-base font-primary items-center">
-                {user ? (
-                    <>
-                        <div className="flex items-center gap-2 text-gray-700">
-                            <User className="w-4 h-4" />
-                            <span className="font-medium">{user.name}</span>
-                        </div>
-                        <Link 
-                            href="/generate"
-                            className="px-6 py-2 border border-dark hover:-top-1 active:top-0 active:shadow-[0px_0px_rgba(0,0,0,0)] transtion-all duration-100 relative hover:shadow-[0px_5px_1px_rgba(0,0,0,0.9)] dark:border-light font-medium rounded-full"
-                        >
-                            Generate
-                        </Link>
-                        <button
-                            onClick={logout}
-                            className="px-6 py-2 bg-yellow-500 hover:-top-1 active:top-0 active:shadow-[0px_0px_rgba(0,0,0,0)] transtion-all duration-100 relative hover:shadow-[0px_5px_1px_rgba(0,0,0,0.9)] text-light font-medium rounded-full flex items-center gap-2"
-                        >
-                            <LogOut className="w-4 h-4" />
-                            Logout
-                        </button>
-                    </>
-                ) : (
-                    <>
-                        <button
-                            onClick={handleLoginClick}
-                            className="px-6 py-2 border border-dark hover:-top-1 active:top-0 active:shadow-[0px_0px_rgba(0,0,0,0)] transtion-all duration-100 relative hover:shadow-[0px_5px_1px_rgba(0,0,0,0.9)] dark:border-light font-medium rounded-full"
-                        >
-                            Log in
-                        </button>
-                        <button
-                            onClick={handleSignupClick}
-                            className="px-6 py-2 bg-yellow-500 hover:-top-1 active:top-0 active:shadow-[0px_0px_rgba(0,0,0,0)] transtion-all duration-100 relative hover:shadow-[0px_5px_1px_rgba(0,0,0,0.9)] text-light font-medium rounded-full"
-                        >
-                            Register
-                        </button>
-                    </>
-                )}
-            </div>
-
-        </div>
-        <AuthPanel 
-            isOpen={authPanelOpen} 
-            onClose={() => setAuthPanelOpen(false)}
-            initialTab={authTab}
-        />
-        </>
-    )
+            <AuthSheet
+                open={showAuthSheet}
+                onOpenChange={setShowAuthSheet}
+                defaultTab={authTab}
+            />
+        </nav>
+    );
 }

@@ -11,12 +11,19 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+
     },
     name: {
       type: String,
       required: true,
       trim: true,
+    },
+    image: {
+      type: String,
+    },
+    emailVerified: {
+      type: Boolean,
+      default: false,
     },
     savedResume: {
       type: String,
@@ -25,11 +32,14 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    _id: true, // Ensure _id is handled (Mongoose does this by default)
   }
 );
 
 // Prevents model overwrite issues in Next.js hot reload
-export default mongoose.models.User || mongoose.model("User", userSchema);
+// Explicitly use 'user' collection to match better-auth default
+export default mongoose.models.User || mongoose.model("User", userSchema, "user");
+
 
 
 

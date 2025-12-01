@@ -3,8 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import { Rocket, Copy, Check, Loader2, FileText, User, Sparkles, Upload, X, History } from "lucide-react";
 import Navbar from "../components/common/navbar";
-import { useAuth } from "@/lib/auth-context";
+import { authClient } from "@/lib/auth-client";
 import EmailHistory from "../components/email-history";
+import { useRouter } from "next/navigation";
+import AuthSheet from "@/components/auth/AuthSheet";
 
 interface EmailResult {
   _id: string;
@@ -15,7 +17,10 @@ interface EmailResult {
 }
 
 export default function GeneratePage() {
-  const { user, saveResume } = useAuth();
+  const { data: session, isPending } = authClient.useSession();
+  const user = session?.user;
+  const router = useRouter();
+
   const [targetContext, setTargetContext] = useState("");
   const [senderResume, setSenderResume] = useState("");
   const [tone, setTone] = useState("Professional");
@@ -27,13 +32,23 @@ export default function GeneratePage() {
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [showHistory, setShowHistory] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showAuthSheet, setShowAuthSheet] = useState(false);
 
-  // Load saved resume when user logs in
   useEffect(() => {
-    if (user?.savedResume) {
-      setSenderResume(user.savedResume);
+    if (!isPending && !session) {
+      setShowAuthSheet(true);
     }
+  }, [session, isPending]);
+
+
+  useEffect(() => {
+
   }, [user]);
+
+  const saveResume = async () => {
+    if (!user) return;
+
+  }
 
   const handleGenerate = async () => {
     if (!targetContext.trim() || !senderResume.trim()) {
@@ -55,7 +70,7 @@ export default function GeneratePage() {
           targetContext,
           senderResume,
           tone,
-          userId: user?._id || null,
+          userId: user?.id || null,
         }),
       });
 
@@ -66,10 +81,10 @@ export default function GeneratePage() {
       }
 
       setEmailResult(data);
-      
-      // Save resume if user is logged in
+
+
       if (user && senderResume.trim()) {
-        await saveResume(senderResume);
+        await saveResume();
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -88,7 +103,7 @@ export default function GeneratePage() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
+
     const validTypes = [
       "application/pdf",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -165,6 +180,14 @@ export default function GeneratePage() {
     e.preventDefault();
   };
 
+  if (isPending) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="w-8 h-8 animate-spin text-yellow-500" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
@@ -196,7 +219,7 @@ export default function GeneratePage() {
 
         {showHistory && user && (
           <div className="mb-8">
-            <EmailHistory userId={user._id} onSelectEmail={(email) => {
+            <EmailHistory userId={user.id} onSelectEmail={(email) => {
               setTargetContext(email.targetContext || "");
               setEmailResult({
                 _id: email._id,
@@ -211,7 +234,7 @@ export default function GeneratePage() {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* Input Form */}
+
           <div className="space-y-6">
             <div>
               <label className="flex items-center gap-2 text-lg font-semibold text-gray-900 font-primary mb-3">
@@ -238,7 +261,7 @@ export default function GeneratePage() {
                 Upload your resume file or paste your background, skills, and accomplishments
               </p>
 
-              {/* File Upload Area */}
+
               <div
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
@@ -286,7 +309,7 @@ export default function GeneratePage() {
                 )}
               </div>
 
-              {/* Text Area for Manual Input */}
+
               <div className="relative">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm text-gray-500 font-primary">Or paste manually:</p>
@@ -358,7 +381,7 @@ export default function GeneratePage() {
             )}
           </div>
 
-          {/* Results */}
+
           <div className="space-y-6">
             {emailResult ? (
               <>
@@ -366,7 +389,7 @@ export default function GeneratePage() {
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-2xl font-bold text-gray-900 font-primary">Generated Email</h2>
                     <button
-                      onClick={() => copyToClipboard(`${emailResult.subject}\n\n${emailResult.body}`)}
+                      onClick={() => copyToClipboard(`${emailResult.subject} \n\n${emailResult.body} `)}
                       className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                     >
                       {copied ? (
@@ -432,7 +455,16 @@ export default function GeneratePage() {
           </div>
         </div>
       </div>
+      <AuthSheet
+        open={showAuthSheet}
+        onOpenChange={(open) => {
+          setShowAuthSheet(open);
+          if (!open && !session) {
+            router.push("/");
+          }
+        }}
+        defaultTab="login"
+      />
     </div>
   );
 }
-

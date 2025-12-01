@@ -4,12 +4,12 @@ import Email from "../../../../lib/models/email";
 
 export async function POST(req) {
   try {
-    
+
     try {
       await connectDB();
     } catch (dbError) {
       return new Response(
-        JSON.stringify({ 
+        JSON.stringify({
           message: "Database connection error: " + dbError.message + ". Please check your MongoDB connection string and ensure your IP is whitelisted in MongoDB Atlas."
         }),
         { status: 500 }
@@ -52,7 +52,7 @@ The email should be highly relevant, highlight specific matching skills and expe
 
     const geminiRes = await axios.post(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" +
-        process.env.GEMINI_API_KEY,
+      process.env.GEMINI_API_KEY,
       {
         contents: [{ parts: [{ text: prompt }] }],
       }
@@ -85,7 +85,7 @@ The email should be highly relevant, highlight specific matching skills and expe
 
     return new Response(JSON.stringify(newEmail), { status: 201 });
   } catch (error) {
-    // Check if it's a MongoDB error
+
     if (error.message && (error.message.includes('ECONNREFUSED') || error.message.includes('mongodb') || error.message.includes('querySrv'))) {
       return new Response(
         JSON.stringify({
@@ -94,8 +94,8 @@ The email should be highly relevant, highlight specific matching skills and expe
         { status: 500 }
       );
     }
-    
-    // Check if it's a Gemini API error
+
+
     if (error.message && (error.message.includes('Gemini') || error.message.includes('API') || error.response)) {
       return new Response(
         JSON.stringify({
@@ -104,7 +104,7 @@ The email should be highly relevant, highlight specific matching skills and expe
         { status: 500 }
       );
     }
-    
+
     // Generic error
     return new Response(
       JSON.stringify({

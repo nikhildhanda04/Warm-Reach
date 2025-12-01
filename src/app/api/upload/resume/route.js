@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req) {
   try {
-    // Ensure we can read the request
+
     if (!req) {
       return Response.json(
         { message: "Invalid request" },
@@ -25,11 +25,11 @@ export async function POST(req) {
     const fileName = file.name.toLowerCase();
     let extractedText = "";
 
-    // Convert file to buffer
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Handle PDF files
+
     if (fileType === "application/pdf" || fileName.endsWith(".pdf")) {
       try {
         // Try using pdf-parse with proper module resolution
@@ -37,34 +37,34 @@ export async function POST(req) {
         try {
           const pdfParseModule = await import("pdf-parse");
           pdfParse = pdfParseModule.default || pdfParseModule;
-        } catch (importError) {
+        } catch {
           // If default import fails, try named import
           const pdfParseModule = await import("pdf-parse");
           pdfParse = pdfParseModule;
         }
-        
+
         // Ensure pdfParse is a function
         if (typeof pdfParse !== 'function') {
           throw new Error("pdf-parse module is not a function");
         }
-        
+
         const pdfData = await pdfParse(buffer);
         extractedText = pdfData.text || pdfData;
       } catch (error) {
         console.error("PDF parsing error:", error);
         // Provide helpful error message
         return Response.json(
-          { 
+          {
             message: "Error parsing PDF file. This might be due to file format issues. Please try: 1) Converting the PDF to DOCX format, 2) Copying and pasting the text directly, or 3) Using a different PDF file. Error details: " + (error.message || String(error))
           },
           { status: 500 }
         );
       }
     }
-    // Handle DOCX files
+
     else if (
       fileType ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
       fileName.endsWith(".docx")
     ) {
       try {
@@ -80,11 +80,11 @@ export async function POST(req) {
         );
       }
     }
-    // Handle plain text files
+
     else if (fileType === "text/plain" || fileName.endsWith(".txt")) {
       extractedText = buffer.toString("utf-8");
     }
-    // Handle DOC files (older Word format) - try to extract as text
+
     else if (
       fileType === "application/msword" ||
       fileName.endsWith(".doc")

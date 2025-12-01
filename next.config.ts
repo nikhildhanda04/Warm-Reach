@@ -13,9 +13,7 @@ const nextConfig: NextConfig = {
     return config;
   },
   // Ensure server-side rendering works with pdf-parse
-  experimental: {
-    serverComponentsExternalPackages: ['pdf-parse', 'mammoth'],
-  },
+  serverExternalPackages: ['pdf-parse', 'mammoth'],
 };
 
 export default nextConfig;

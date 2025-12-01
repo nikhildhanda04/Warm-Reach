@@ -1,22 +1,52 @@
-import Link from "next/link";
+"use client";
+
+import { useState } from "react";
+import { ArrowRight } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import AuthSheet from "@/components/auth/AuthSheet";
 
 export default function FinalCTA() {
+  const { data: session } = authClient.useSession();
+  const router = useRouter();
+  const [showAuthSheet, setShowAuthSheet] = useState(false);
+
+  const handleStartClick = () => {
+    if (session) {
+      router.push("/generate");
+    } else {
+      setShowAuthSheet(true);
+    }
+  };
+
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-white via-yellow-50 to-yellow-100">
-      <div className="max-w-4xl mx-auto text-center">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-zinc-700 font-primary">
-          Stop Guessing. Start Converting.
+    <section className="py-24 bg-gray-900 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-yellow-500 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-yellow-500 rounded-full blur-3xl" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-primary">
+          Ready to Supercharge Your Outreach?
         </h2>
-        <p className="text-lg md:text-xl text-gray-700 mb-8 font-secondary max-w-2xl mx-auto">
-          Ready to upgrade your outreach? Try the most intelligent email generator today.
+        <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto font-primary">
+          Join thousands of professionals who are saving time and getting more replies with AI-generated emails.
         </p>
-        <Link 
-          href="/generate"
-          className="inline-block px-8 py-4 bg-yellow-500 hover:-top-1 active:top-0 active:shadow-[0px_0px_rgba(0,0,0,0)] transition-all duration-100 relative hover:shadow-[0px_5px_1px_rgba(0,0,0,0.9)] text-black font-medium rounded-full text-lg font-primary"
+        <button
+          onClick={handleStartClick}
+          className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-gray-900 transition-all duration-200 bg-yellow-500 rounded-full hover:bg-yellow-400 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 shadow-lg hover:shadow-yellow-500/25 font-primary"
         >
           Start Generating Now
-        </Link>
+          <ArrowRight className="ml-2 w-5 h-5" />
+        </button>
       </div>
+
+      <AuthSheet
+        open={showAuthSheet}
+        onOpenChange={setShowAuthSheet}
+        defaultTab="register"
+      />
     </section>
   );
 }
